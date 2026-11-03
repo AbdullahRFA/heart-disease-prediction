@@ -236,4 +236,9 @@ __pycache__/
 
 # Model and dataset files
 backend/data/
-backend/model/
+
+# Ignore other generated model files
+backend/model/*
+
+# Track the trained model required for deployment
+!backend/model/heart_model.joblib
