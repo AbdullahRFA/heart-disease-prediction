@@ -1,4 +1,8 @@
+
 import { useState } from 'react'
+
+import { predictHeartDisease } from '../services/predictionService'
+import PredictionResult from './PredictionResult'
 
 function PatientForm() {
 
@@ -19,38 +23,77 @@ function PatientForm() {
     thal: ''
   })
 
+  // Store prediction result
+  const [result, setResult] = useState(null)
+
+  // Track API request status
+  const [loading, setLoading] = useState(false)
+
+  // Store error messages
+  const [error, setError] = useState('')
+
+
   // Update form data whenever an input changes
   function handleChange(event) {
     const { name, value } = event.target
 
-    setFormData({
-      ...formData,
+    setFormData((previousData) => ({
+      ...previousData,
       [name]: value
-    })
+    }))
+
+    // Clear previous result when the user changes an input
+    setResult(null)
+    setError('')
   }
+
 
   // Handle form submission
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
 
-    const patientData = {
-      age: Number(formData.age),
-      sex: Number(formData.sex),
-      cp: Number(formData.cp),
-      trestbps: Number(formData.trestbps),
-      chol: Number(formData.chol),
-      fbs: Number(formData.fbs),
-      restecg: Number(formData.restecg),
-      thalach: Number(formData.thalach),
-      exang: Number(formData.exang),
-      oldpeak: Number(formData.oldpeak),
-      slope: Number(formData.slope),
-      ca: Number(formData.ca),
-      thal: Number(formData.thal)
-    }
+    setLoading(true)
+    setError('')
+    setResult(null)
 
-    console.log('Patient Data:', patientData)
+    try {
+
+      // Convert form values from strings to numbers
+      const patientData = {
+        age: Number(formData.age),
+        sex: Number(formData.sex),
+        cp: Number(formData.cp),
+        trestbps: Number(formData.trestbps),
+        chol: Number(formData.chol),
+        fbs: Number(formData.fbs),
+        restecg: Number(formData.restecg),
+        thalach: Number(formData.thalach),
+        exang: Number(formData.exang),
+        oldpeak: Number(formData.oldpeak),
+        slope: Number(formData.slope),
+        ca: Number(formData.ca),
+        thal: Number(formData.thal)
+      }
+
+      // Send patient data to FastAPI
+      const prediction = await predictHeartDisease(patientData)
+
+      // Store the prediction response
+      setResult(prediction)
+
+    } catch (err) {
+
+      // Display an error if the API request fails
+      setError(err.message || 'Something went wrong.')
+
+    } finally {
+
+      // Stop loading whether the request succeeds or fails
+      setLoading(false)
+
+    }
   }
+
 
   return (
     <section className="patient-form-section">
@@ -64,7 +107,7 @@ function PatientForm() {
 
       <form onSubmit={handleSubmit}>
 
-        {/* Age */}
+        {/* 1. Age */}
         <div className="form-group">
           <label htmlFor="age">Age (years)</label>
 
@@ -80,7 +123,8 @@ function PatientForm() {
           />
         </div>
 
-        {/* Sex */}
+
+        {/* 2. Sex */}
         <div className="form-group">
           <label htmlFor="sex">Sex</label>
 
@@ -92,12 +136,13 @@ function PatientForm() {
             required
           >
             <option value="">Select sex</option>
-            <option value="0">0</option>
-            <option value="1">1</option>
+            <option value="0">Female</option>
+            <option value="1">Male</option>
           </select>
         </div>
 
-        {/* Chest Pain Type */}
+
+        {/* 3. Chest Pain Type */}
         <div className="form-group">
           <label htmlFor="cp">Chest Pain Type</label>
 
@@ -116,7 +161,8 @@ function PatientForm() {
           </select>
         </div>
 
-        {/* Resting Blood Pressure */}
+
+        {/* 4. Resting Blood Pressure */}
         <div className="form-group">
           <label htmlFor="trestbps">
             Resting Blood Pressure (mm Hg)
@@ -133,7 +179,8 @@ function PatientForm() {
           />
         </div>
 
-        {/* Cholesterol */}
+
+        {/* 5. Cholesterol */}
         <div className="form-group">
           <label htmlFor="chol">
             Serum Cholesterol (mg/dl)
@@ -150,7 +197,8 @@ function PatientForm() {
           />
         </div>
 
-        {/* Fasting Blood Sugar */}
+
+        {/* 6. Fasting Blood Sugar */}
         <div className="form-group">
           <label htmlFor="fbs">
             Fasting Blood Sugar
@@ -164,12 +212,13 @@ function PatientForm() {
             required
           >
             <option value="">Select fasting blood sugar</option>
-            <option value="0">0 - False</option>
-            <option value="1">1 - True</option>
+            <option value="0">0 - False (120 mg/dl or less)</option>
+            <option value="1">1 - True (above 120 mg/dl)</option>
           </select>
         </div>
 
-        {/* Resting ECG */}
+
+        {/* 7. Resting ECG */}
         <div className="form-group">
           <label htmlFor="restecg">Resting ECG Result</label>
 
@@ -187,7 +236,8 @@ function PatientForm() {
           </select>
         </div>
 
-        {/* Maximum Heart Rate */}
+
+        {/* 8. Maximum Heart Rate */}
         <div className="form-group">
           <label htmlFor="thalach">
             Maximum Heart Rate Achieved
@@ -204,7 +254,8 @@ function PatientForm() {
           />
         </div>
 
-        {/* Exercise-Induced Angina */}
+
+        {/* 9. Exercise-Induced Angina */}
         <div className="form-group">
           <label htmlFor="exang">
             Exercise-Induced Angina
@@ -223,7 +274,8 @@ function PatientForm() {
           </select>
         </div>
 
-        {/* ST Depression */}
+
+        {/* 10. ST Depression */}
         <div className="form-group">
           <label htmlFor="oldpeak">ST Depression (oldpeak)</label>
 
@@ -239,9 +291,12 @@ function PatientForm() {
           />
         </div>
 
-        {/* Slope */}
+
+        {/* 11. Slope */}
         <div className="form-group">
-          <label htmlFor="slope">Slope of Peak Exercise ST Segment</label>
+          <label htmlFor="slope">
+            Slope of Peak Exercise ST Segment
+          </label>
 
           <select
             id="slope"
@@ -257,7 +312,8 @@ function PatientForm() {
           </select>
         </div>
 
-        {/* Number of Major Vessels */}
+
+        {/* 12. Number of Major Vessels */}
         <div className="form-group">
           <label htmlFor="ca">Number of Major Vessels (ca)</label>
 
@@ -277,7 +333,8 @@ function PatientForm() {
           </select>
         </div>
 
-        {/* Thalassemia */}
+
+        {/* 13. Thalassemia */}
         <div className="form-group">
           <label htmlFor="thal">Thalassemia (thal)</label>
 
@@ -296,11 +353,38 @@ function PatientForm() {
           </select>
         </div>
 
-        <button type="submit" className="predict-button">
-          Predict Heart Disease
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className="predict-button"
+          disabled={loading}
+        >
+          {loading ? 'Predicting...' : 'Predict Heart Disease'}
         </button>
 
+
+        {/* Error Message */}
+        {error && (
+          <div className="error-message">
+            {error}
+          </div>
+        )}
+
+
+        {/* Loading Message */}
+        {loading && (
+          <p className="loading-message">
+            Analyzing patient information...
+          </p>
+        )}
+
+
+        {/* Prediction Result */}
+        <PredictionResult result={result} />
+
       </form>
+
     </section>
   )
 }

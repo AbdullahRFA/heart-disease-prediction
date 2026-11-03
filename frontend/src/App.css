@@ -112,3 +112,47 @@
     grid-template-columns: 1fr;
   }
 }
+/* Prediction Result */
+
+.prediction-result {
+  grid-column: 1 / -1;
+  margin-top: 10px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f1f5f9;
+  border: 1px solid #cbd5e1;
+}
+
+.prediction-result h3 {
+  margin-top: 0;
+}
+
+.result-positive {
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.result-negative {
+  color: #15803d;
+  font-weight: 600;
+}
+
+.result-disclaimer {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.error-message {
+  grid-column: 1 / -1;
+  color: #b91c1c;
+  background-color: #fee2e2;
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.loading-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #2563eb;
+  font-weight: 600;
+}
