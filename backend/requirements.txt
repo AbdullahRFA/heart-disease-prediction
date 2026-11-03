@@ -1,16 +1,11 @@
-# Machine Learning and Data Processing
-numpy
-pandas
-scikit-learn
-joblib
+# Core data processing
+numpy==2.5.4
+pandas==3.1.0
 
-# Data Visualization
-matplotlib
-seaborn
-
-# Interactive Development
-jupyter
+# Machine Learning
+scikit-learn==1.8.0
+joblib==1.6.0
 
 # Backend API
-fastapi
-uvicorn[standard]
+fastapi==0.162.0
+uvicorn[standard]==0.54.0

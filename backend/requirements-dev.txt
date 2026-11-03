@@ -1,0 +1,8 @@
+-r requirements.txt
+
+# Data visualization
+matplotlib
+seaborn
+
+# Interactive development
+jupyter
