@@ -14,6 +14,12 @@ RUN npm ci
 # Copy the frontend source code
 COPY . .
 
+# Accept the API URL at Docker build time
+ARG VITE_API_BASE_URL=/api
+
+# Make the API URL available to Vite
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 # Build the production application
 RUN npm run build
 
