@@ -1,5 +1,6 @@
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import PatientForm from '../components/PatientForm'
 
 function PredictionPage() {
   return (
@@ -14,6 +15,9 @@ function PredictionPage() {
           Our application will use a trained machine learning
           model to predict the possibility of heart disease.
         </p>
+
+        <PatientForm />
+
       </main>
 
       <Footer />
