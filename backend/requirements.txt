@@ -1,0 +1,16 @@
+# Machine Learning and Data Processing
+numpy
+pandas
+scikit-learn
+joblib
+
+# Data Visualization
+matplotlib
+seaborn
+
+# Interactive Development
+jupyter
+
+# Backend API
+fastapi
+uvicorn[standard]
